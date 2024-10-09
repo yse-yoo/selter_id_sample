@@ -1,0 +1,38 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+h1 {
+    text-align: center;
+}
+
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+
+img {
+    border-radius: 50%;
+}
+button {
+    background-color: transparent; /* Remove the background color */
+    border: none; /* Remove border, optional */
+    margin: 10px; /* Set margin around the button */
+    cursor: pointer; /* Change cursor to pointer for better UX */
+    padding: 10px 20px; /* Add some padding for better size */
+}
+
+button:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Optional: Add a hover effect */
+}
