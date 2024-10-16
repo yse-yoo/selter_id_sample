@@ -1,3 +1,4 @@
+<!-- login.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +21,11 @@
     <div class="container max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg bg-opacity-90">
         <h1 class="text-2xl font-bold text-center mb-6">Login</h1>
 
-        <form id="loginForm" class="space-y-4">
+        <?php if (isset($_GET['error'])): ?>
+            <p class="text-red-500 text-center"><?= htmlspecialchars($_GET['error']) ?></p>
+        <?php endif; ?>
+
+        <form action="auth.php" method="POST" class="space-y-4">
             <div>
                 <label for="email" class="block text-sm font-medium">Email:</label>
                 <input type="email" id="email" name="email" placeholder="Enter your email" required 
@@ -36,28 +41,9 @@
             <button type="submit" class="w-full bg-purple-500 text-white py-2 rounded-md">Login</button>
 
             <p class="text-sm text-center mt-4">
-                Don't have an account? <a href="register.html" class="text-purple-500 underline">Register here</a>.
+                Don't have an account? <a href="register.php" class="text-purple-500 underline">Register here</a>.
             </p>
         </form>
-
-        <div id="loginMessage" class="mt-4"></div>
     </div>
-
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const storedUser = JSON.parse(localStorage.getItem('registeredUser'));
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            if (storedUser && storedUser.email === email && storedUser.password === password) {
-                document.getElementById('loginMessage').innerHTML = '<p class="text-green-500">Login successful!</p>';
-                // Redirect or perform post-login actions here
-            } else {
-                document.getElementById('loginMessage').innerHTML = '<p class="text-red-500">Invalid email or password.</p>';
-            }
-        });
-    </script>
 </body>
 </html>

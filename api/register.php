@@ -54,11 +54,11 @@ $sql = "INSERT INTO users (name, email, password, phone)
 
 try {
     // ユーザーの挿入
-    $pdo->beginTransaction();
+    // $pdo->beginTransaction();
     $stmt = $pdo->prepare($sql);
     $stmt->execute($posts);
     $userId = $pdo->lastInsertId();
-    $pdo->commit();
+    // $pdo->commit();
 
     // Upload Multiple Images
     uploadImages($userId);

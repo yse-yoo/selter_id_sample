@@ -1,3 +1,4 @@
+const registrationForm = document.getElementById('registrationForm');
 const openCameraBtn = document.getElementById('openCameraBtn');
 const video = document.getElementById('video');
 const captureBtn = document.getElementById('captureBtn');
@@ -7,11 +8,11 @@ const photoInput = document.getElementById('photo');
 // キャプチャされた画像を保持するための DataTransfer オブジェクト
 const dataTransfer = new DataTransfer();
 
+// 登録処理
 const regist = async (e) => {
-    e.preventDefault();
-    alert('ok');
+    e.preventDefault(); // フォームのデフォルト送信を防ぐ
 
-    const formData = new FormData(e.target); // 修正：e.target でフォーム全体を取得
+    const formData = new FormData(e.target); // フォームデータ取得
 
     // フォームデータにキャプチャされた画像ファイルを追加
     for (let i = 0; i < dataTransfer.files.length; i++) {
@@ -43,6 +44,7 @@ const regist = async (e) => {
     }
 }
 
+// カメラ起動処理
 const onCamera = async (e) => {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
     video.srcObject = stream;
@@ -50,23 +52,38 @@ const onCamera = async (e) => {
     captureBtn.style.display = 'block';
 }
 
+// 画像キャプチャ処理 (0.5秒間隔で10枚の画像を追加)
 const onCapture = (e) => {
     const context = canvas.getContext('2d');
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    canvas.toBlob((blob) => {
-        const file = new File([blob], `captured-image-${Date.now()}.jpg`, { type: 'image/jpeg' });
+    let count = 0;
 
-        // DataTransfer にキャプチャした画像を追加
-        dataTransfer.items.add(file);
+    const captureImage = () => {
+        if (count < 10) {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob((blob) => {
+                const file = new File([blob], `captured-image-${Date.now()}-${count}.jpg`, { type: 'image/jpeg' });
 
-        // 更新したファイルリストを <input> 要素に反映
-        photoInput.files = dataTransfer.files;
+                // DataTransfer にキャプチャした画像を追加
+                dataTransfer.items.add(file);
 
-        // 表示を隠す
-        video.style.display = 'none';
-        captureBtn.style.display = 'none';
+                // 更新したファイルリストを <input> 要素に反映
+                photoInput.files = dataTransfer.files;
 
-        // デバッグ用：追加されたファイルのリストを確認
-        console.log(dataTransfer.files);
-    });
-}
+                // デバッグ用：追加されたファイルのリストを確認
+                console.log(`Captured image ${count + 1}:`, dataTransfer.files);
+            });
+
+            count++;
+            setTimeout(captureImage, 500); // 0.5秒間隔で次のキャプチャを実行
+        } else {
+            // 全てのキャプチャが完了した後に表示を隠す
+            video.style.display = 'none';
+            captureBtn.style.display = 'none';
+        }
+    };
+
+    captureImage(); // 最初のキャプチャを開始
+};
+
+// フォーム送信イベントリスナー
+registrationForm.addEventListener('submit', regist);

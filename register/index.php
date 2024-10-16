@@ -13,7 +13,7 @@
     <div class="container max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg bg-opacity-90">
         <h1 class="text-2xl font-bold text-center mb-6">Evacuation Registration</h1>
 
-        <form onsubmit="regist()" id="registrationForm" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <form id="registrationForm" method="POST" enctype="multipart/form-data" class="space-y-4">
             <div>
                 <label for="name" class="block text-sm font-medium">Full Name:</label>
                 <input type="text" id="name" name="name" placeholder="Enter your full name" required
@@ -95,6 +95,7 @@
 
     <script src="../js/env.js"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/test.js"></script>
 </body>
 
 </html>
