@@ -1,34 +1,24 @@
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
+const responseMessage = document.getElementById('responseMessage');
 
 // キャプチャされた画像を保持するための DataTransfer オブジェクト
-const dataTransfer = new DataTransfer();
+var dataTransfer = new DataTransfer();
 
 // 顔認識
-const detect = async () => {
+const detect = async (file) => {
     const formData = new FormData();
-    // フォームデータにキャプチャされた画像ファイルを追加
-    if (dataTransfer.files.length > 0) {
-        formData.append('file', dataTransfer.files[0]);
-        console.log(dataTransfer.files[0]);
-    } else {
-        console.error("No captured image to send.");
-        return;
-    }
-
-    const responseMessage = document.getElementById('responseMessage');
+    formData.append('image', file);
 
     try {
-        const response = await fetch(API_DETECT_URL, {
+        const response = await fetch(API_DETECT_FACE_URL, {
             method: 'POST',
             body: formData,
         });
-
         const contentType = response.headers.get('Content-Type');
-
         if (response.ok && contentType && contentType.includes('application/json')) {
             const result = await response.json();
-            responseMessage.textContent = result.message || 'Registration Successful!';
+            responseMessage.textContent = result.message || 'Detect Face!';
         } else if (contentType && contentType.includes('text/html')) {
             const html = await response.text();
             responseMessage.textContent = `Error: Server returned HTML: ${html}`;
@@ -42,31 +32,25 @@ const detect = async () => {
 };
 
 // 受付処理
-const recept = async () => {
-    const formData = new FormData();  // フォームデータを画像ファイルのみで作成
-
-    // フォームデータにキャプチャされた画像ファイルを追加
-    if (dataTransfer.files.length > 0) {
-        formData.append('file', dataTransfer.files[0]);  // "file" フィールドで画像を送信
-        console.log(dataTransfer.files[0]);
-    } else {
-        console.error("No captured image to send.");
-        return;
-    }
-
-    const responseMessage = document.getElementById('responseMessage');
+const recept = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
 
     try {
-        const response = await fetch(API_RECEPT_URL, {
+        const response = await fetch(API_RECEPT_FACE_URL, {
             method: 'POST',
             body: formData,
         });
 
         const contentType = response.headers.get('Content-Type');
-
         if (response.ok && contentType && contentType.includes('application/json')) {
             const result = await response.json();
-            responseMessage.textContent = result.message || 'Registration Successful!';
+            console.log(result)
+            if (result.user_id > 0) {
+                responseMessage.textContent = "Recept user_id: " + result.user_id;
+            } else {
+                responseMessage.textContent = "Recept Error!";
+            }
         } else if (contentType && contentType.includes('text/html')) {
             const html = await response.text();
             responseMessage.textContent = `Error: Server returned HTML: ${html}`;
@@ -110,12 +94,10 @@ const captureImage = (callback) => {
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     canvas.toBlob((blob) => {
-        const file = new File([blob], `captured-image-${Date.now()}.jpg`, { type: 'image/jpeg' });
-
-        // DataTransfer にキャプチャした画像を追加
-        dataTransfer.items.add(file);
-
-        callback();
+        const file = new File([blob], `captured-image.jpg`, { type: 'image/jpeg' });
+        // dataTransfer = new DataTransfer();
+        // dataTransfer.items.add(file);
+        callback(file);
     });
 };
 

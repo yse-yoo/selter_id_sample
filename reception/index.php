@@ -19,7 +19,8 @@
         <!-- キャプチャした画像を保持するキャンバス -->
         <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
         
-        <button type="button" class="w-full bg-purple-500 text-white py-2 rounded-md" onclick="onDetect()">Detect</button>
+        <button type="button" class="w-full bg-purple-500 text-white my-2 py-2 rounded-md" onclick="onDetect()">Detect</button>
+
         <!-- 受付ボタン -->
         <button type="button" class="w-full bg-purple-500 text-white py-2 rounded-md" onclick="onRecept()">Reception</button>
 
