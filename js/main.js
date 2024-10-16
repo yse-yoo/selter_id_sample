@@ -15,8 +15,9 @@ const regist = async (e) => {
     const formData = new FormData(e.target);
     const responseMessage = document.getElementById('responseMessage');
 
-    registFaces(1);
-    return;
+    // Test
+    // registFaces(1);
+    // return;
 
     try {
         const response = await fetch(API_REGIST_URL, {
@@ -29,8 +30,8 @@ const regist = async (e) => {
         if (response.ok && contentType && contentType.includes('application/json')) {
             const result = await response.json();
             responseMessage.textContent = result.message || 'Registration Successful!';
-
-            if (result.useId) {
+            console.log(result)
+            if (result.userId) {
                 registFaces(result.userId);
             }
         } else if (contentType && contentType.includes('text/html')) {
@@ -104,7 +105,7 @@ const onCapture = (e) => {
                 photoInput.files = dataTransfer.files;
 
                 // デバッグ用：追加されたファイルのリストを確認
-                console.log(`Captured image ${count + 1}:`, dataTransfer.files);
+                // console.log(`Captured image ${count + 1}:`, dataTransfer.files);
             });
 
             count++;
