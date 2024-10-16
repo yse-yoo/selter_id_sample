@@ -61,7 +61,7 @@ try {
     // $pdo->commit();
 
     // Upload Multiple Images
-    uploadImages($userId);
+    // uploadImages($userId);
 
     // Responce
     header('Content-Type: application/json');

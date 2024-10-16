@@ -12,14 +12,11 @@ const dataTransfer = new DataTransfer();
 const regist = async (e) => {
     e.preventDefault(); // フォームのデフォルト送信を防ぐ
 
-    const formData = new FormData(e.target); // フォームデータ取得
-
-    // フォームデータにキャプチャされた画像ファイルを追加
-    for (let i = 0; i < dataTransfer.files.length; i++) {
-        formData.append('photo[]', dataTransfer.files[i]);
-    }
-
+    const formData = new FormData(e.target);
     const responseMessage = document.getElementById('responseMessage');
+
+    registFaces(1);
+    return;
 
     try {
         const response = await fetch(API_REGIST_URL, {
@@ -32,6 +29,42 @@ const regist = async (e) => {
         if (response.ok && contentType && contentType.includes('application/json')) {
             const result = await response.json();
             responseMessage.textContent = result.message || 'Registration Successful!';
+
+            if (result.useId) {
+                registFaces(result.userId);
+            }
+        } else if (contentType && contentType.includes('text/html')) {
+            const html = await response.text();
+            responseMessage.textContent = `Error: Server returned HTML: ${html}`;
+        } else {
+            throw new Error('Unexpected response format');
+        }
+    } catch (error) {
+        responseMessage.textContent = `Error: ${error.message}`;
+        responseMessage.style.color = 'red';
+    }
+}
+
+const registFaces = async (userId) => {
+    const formData = new FormData();
+    formData.append('user_id', userId);
+    // フォームデータにキャプチャされた画像ファイルを追加
+    // 複数のファイルをFormDataに追加
+    for (let i = 0; i < dataTransfer.files.length; i++) {
+        formData.append('images', dataTransfer.files[i]);
+    }
+    console.log(userId, dataTransfer.files)
+
+    try {
+        const response = await fetch(API_REGIST_FACE_URL, {
+            method: 'POST',
+            body: formData,
+        });
+
+        const contentType = response.headers.get('Content-Type');
+        if (response.ok && contentType && contentType.includes('application/json')) {
+            const result = await response.json();
+            console.log(result)
         } else if (contentType && contentType.includes('text/html')) {
             const html = await response.text();
             responseMessage.textContent = `Error: Server returned HTML: ${html}`;

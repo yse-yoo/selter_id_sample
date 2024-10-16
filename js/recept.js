@@ -4,6 +4,43 @@ const canvas = document.getElementById('canvas');
 // キャプチャされた画像を保持するための DataTransfer オブジェクト
 const dataTransfer = new DataTransfer();
 
+// 顔認識
+const detect = async () => {
+    const formData = new FormData();
+    // フォームデータにキャプチャされた画像ファイルを追加
+    if (dataTransfer.files.length > 0) {
+        formData.append('file', dataTransfer.files[0]);
+        console.log(dataTransfer.files[0]);
+    } else {
+        console.error("No captured image to send.");
+        return;
+    }
+
+    const responseMessage = document.getElementById('responseMessage');
+
+    try {
+        const response = await fetch(API_DETECT_URL, {
+            method: 'POST',
+            body: formData,
+        });
+
+        const contentType = response.headers.get('Content-Type');
+
+        if (response.ok && contentType && contentType.includes('application/json')) {
+            const result = await response.json();
+            responseMessage.textContent = result.message || 'Registration Successful!';
+        } else if (contentType && contentType.includes('text/html')) {
+            const html = await response.text();
+            responseMessage.textContent = `Error: Server returned HTML: ${html}`;
+        } else {
+            throw new Error('Unexpected response format');
+        }
+    } catch (error) {
+        responseMessage.textContent = `Error: ${error.message}`;
+        responseMessage.style.color = 'red';
+    }
+};
+
 // 受付処理
 const recept = async () => {
     const formData = new FormData();  // フォームデータを画像ファイルのみで作成
@@ -59,8 +96,16 @@ const onCamera = async () => {
     }
 };
 
+const onDetect = () => {
+    captureImage(detect)
+}
+
+const onRecept = () => {
+    captureImage(recept)
+}
+
 // 画像キャプチャと送信処理
-const captureImage = () => {
+const captureImage = (callback) => {
     const context = canvas.getContext('2d');
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
@@ -70,8 +115,7 @@ const captureImage = () => {
         // DataTransfer にキャプチャした画像を追加
         dataTransfer.items.add(file);
 
-        // 受付処理を呼び出してフォームデータを送信
-        recept();
+        callback();
     });
 };
 

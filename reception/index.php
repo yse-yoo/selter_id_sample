@@ -19,8 +19,9 @@
         <!-- キャプチャした画像を保持するキャンバス -->
         <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
         
+        <button type="button" class="w-full bg-purple-500 text-white py-2 rounded-md" onclick="onDetect()">Detect</button>
         <!-- 受付ボタン -->
-        <button type="button" class="w-full bg-purple-500 text-white py-2 rounded-md" onclick="captureImage()">Reception</button>
+        <button type="button" class="w-full bg-purple-500 text-white py-2 rounded-md" onclick="onRecept()">Reception</button>
 
         <!-- レスポンスメッセージを表示 -->
         <div id="responseMessage" class="mt-4"></div>
