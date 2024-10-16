@@ -22,7 +22,7 @@ const regist = async (e) => {
     const responseMessage = document.getElementById('responseMessage');
 
     try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(API_REGIST_URL, {
             method: 'POST',
             body: formData,
         });
@@ -43,6 +43,7 @@ const regist = async (e) => {
         responseMessage.style.color = 'red';
     }
 }
+
 
 // カメラ起動処理
 const onCamera = async (e) => {
