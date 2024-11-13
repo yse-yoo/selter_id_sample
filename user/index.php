@@ -69,7 +69,6 @@ if (empty($_SESSION['user_id'])) {
             <div class="col-span-2 bg-white p-6 rounded-lg shadow-lg">
                 <h2 class="text-xl font-semibold text-gray-700 mb-4">Account Management</h2>
                 <ul class="text-gray-700 space-y-4">
-                    <li><a href="update.php" class="text-purple-500 hover:underline">Update Profile</a></li>
                     <li><a href="#" class="text-purple-500 hover:underline">Manage Evacuation Info</a></li>
                     <li><a href="hinan.php" class="text-purple-500 hover:underline">View Shelter Data</a></li>
                     <li><a href="regist_face.php" class="text-purple-500 hover:underline">Regist Faces</a></li>
